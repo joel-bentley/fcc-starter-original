@@ -1,7 +1,6 @@
-'use strict';
+exports.appUrl = window.location.origin;
 
-var appUrl = window.location.origin;
-var ajaxFunctions = {
+exports.ajaxFunctions = {
    ready: function ready(fn) {
       if (typeof fn !== 'function') {
          return;
