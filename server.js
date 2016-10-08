@@ -59,10 +59,10 @@ app.use('/public', express.static(path.join(__dirname, '/public')));
 /**
  * Primary app routes.
  */
-app.get('/', passportConfig.isAuthenticated, routeController.index);
+//app.get('/', passportConfig.isAuthenticated, routeController.index);
+app.get(['/', '/profile'], routeController.index);
 app.get('/login', routeController.getLogin);
 app.get('/logout', routeController.getLogout);
-app.get('/profile', passportConfig.isAuthenticated, routeController.getProfile);
 
 /**
  * OAuth authentication routes. (Sign in)

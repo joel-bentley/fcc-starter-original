@@ -21,10 +21,3 @@ exports.getLogout = function(req, res) {
 	req.logout();
 	res.redirect('/login');
 };
-
-/**
- * GET /profile
- */
-exports.getProfile = function(req, res) {
-	res.sendFile(path.join(__dirname, '../public/profile.html'));
-}
