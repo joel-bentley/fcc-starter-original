@@ -1,6 +1,4 @@
-/**
- * Module dependencies.
- */
+// Module dependencies.
 var express = require('express');
 var session = require('express-session');
 var chalk = require('chalk');
@@ -9,30 +7,25 @@ var path = require('path');
 var mongoose = require('mongoose');
 var passport = require('passport');
 
-/**
- * Load environment variables from .env file.
- */
+var webpack = require('webpack');
+var config = require('./webpack.config');
+
+// Load environment variables from .env file.
 dotenv.load();
 
-/**
- * Controllers (route handlers).
- */
+// Controllers (route handlers).
 var routeController = require('./controllers/route');
 var clickController = require('./controllers/click');
 
-/**
- * API keys and Passport configuration.
- */
+// API keys and Passport configuration.
 var passportConfig = require('./config/passport');
 
-/**
- * Create Express server.
- */
+// Create Express server.
 var app = express();
 
-/**
- * Connect to MongoDB.
- */
+var compiler = webpack(config);
+
+// Connect to MongoDB.
 mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI);
 mongoose.connection.on('connected', function() {
 	console.log('%s MongoDB connection established!', chalk.green('✓'));
@@ -43,9 +36,7 @@ mongoose.connection.on('error', function() {
 });
 mongoose.Promise = global.Promise;
 
-/**
- * Express configuration.
- */
+// Express configuration.
 app.set('port', process.env.PORT || 8080);
 app.use(session({
 	secret: process.env.SESSION_SECRET,
@@ -56,17 +47,21 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use('/public', express.static(path.join(__dirname, '/public')));
 
-/**
- * Primary app routes.
- */
-//app.get('/', passportConfig.isAuthenticated, routeController.index);
+if (app.get('env') === 'development') {
+  app.use(require('webpack-dev-middleware')(compiler, {
+    noInfo: true,
+    publicPath: config.output.publicPath
+  }));
+  app.use(require('webpack-hot-middleware')(compiler));
+}
+
+// Primary app routes.
+//!!!!!!!app.get('/', passportConfig.isAuthenticated, routeController.index);
 app.get(['/', '/profile'], routeController.index);
 app.get('/login', routeController.getLogin);
 app.get('/logout', routeController.getLogout);
 
-/**
- * OAuth authentication routes. (Sign in)
- */
+// OAuth authentication routes.
 app.get('/auth/github', passport.authenticate('github'));
 
 app.get('/auth/github/callback', passport.authenticate('github', {
@@ -74,9 +69,7 @@ app.get('/auth/github/callback', passport.authenticate('github', {
 	failureRedirect: '/login'
 }));
 
-/**
- * API routes.
- */
+// API routes.
 app.get('/api/:id/clicks', passportConfig.isAuthenticated, clickController.getClicks);
 app.post('/api/:id/clicks', passportConfig.isAuthenticated, clickController.addClick);
 app.delete('/api/:id/clicks', passportConfig.isAuthenticated, clickController.resetClicks);
@@ -85,9 +78,15 @@ app.get('/api/:id', passportConfig.isAuthenticated, function(req, res) {
 	res.json(req.user.github);
 });
 
-/**
- * Start Express server.
- */
+// Production error handler
+if (app.get('env') === 'production') {
+  app.use(function(err, req, res, next) {
+    console.error(err.stack);
+    res.sendStatus(err.status || 500);
+  });
+}
+
+// Start Express server.
 app.listen(app.get('port'), function() {
 	console.log('%s Express server listening on port %d in %s mode.', chalk.green('✓'), app.get('port'), app.get('env'));
 });
