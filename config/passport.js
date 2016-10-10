@@ -12,9 +12,7 @@ passport.deserializeUser(function(id, done) {
 	});
 });
 
-/**
- * Sign in with GitHub.
- */
+// Sign in with GitHub.
 passport.use(new GitHubStrategy({
 		clientID: process.env.GITHUB_KEY,
 		clientSecret: process.env.GITHUB_SECRET,
@@ -52,9 +50,7 @@ passport.use(new GitHubStrategy({
 		});
 	}));
 
-/**
- * Login Required middleware.
- */
+// Login Required middleware.
 exports.isAuthenticated = function(req, res, next) {
 	if (req.isAuthenticated()) {
 		return next();

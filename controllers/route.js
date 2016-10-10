@@ -1,22 +1,16 @@
 var path = require('path');
 
-/**
- * GET /
- */
+// GET /
 exports.index = function(req, res) {
 	res.sendFile(path.join(__dirname, '../public/index.html'));
 };
 
-/**
- * GET /login
- */
+// GET /login
 exports.getLogin = function(req, res) {
 	res.sendFile(path.join(__dirname, '../public/login.html'));
 };
 
-/**
- * GET /logout
- */
+// GET /logout
 exports.getLogout = function(req, res) {
 	req.logout();
 	res.redirect('/login');

@@ -46,6 +46,10 @@ var config = {
             }]
           ]
         }
+      },
+      {
+        test: /\.css$/,
+        loaders: ['style', 'css?sourceMap']
       }
     ]
   }

@@ -1,2 +1,0 @@
-require('./clickController');
-require('./userController');

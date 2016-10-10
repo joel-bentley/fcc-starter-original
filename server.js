@@ -4,6 +4,7 @@ var session = require('express-session');
 var chalk = require('chalk');
 var dotenv = require('dotenv');
 var path = require('path');
+var favicon = require('serve-favicon');
 var mongoose = require('mongoose');
 var passport = require('passport');
 
@@ -45,6 +46,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(favicon(path.join(__dirname, '/public/favicon.png')));
 app.use('/public', express.static(path.join(__dirname, '/public')));
 
 if (app.get('env') === 'development') {
@@ -56,8 +58,12 @@ if (app.get('env') === 'development') {
 }
 
 // Primary app routes.
-//!!!!!!!app.get('/', passportConfig.isAuthenticated, routeController.index);
-app.get(['/', '/profile'], routeController.index);
+var clientAppRoutes = ['/', '/profile'];
+if (app.get('env') === 'production') {
+	app.get(clientAppRoutes, passportConfig.isAuthenticated, routeController.index);
+} else {
+	app.get(clientAppRoutes, routeController.index);
+}
 app.get('/login', routeController.getLogin);
 app.get('/logout', routeController.getLogout);
 
@@ -70,11 +76,11 @@ app.get('/auth/github/callback', passport.authenticate('github', {
 }));
 
 // API routes.
-app.get('/api/:id/clicks', passportConfig.isAuthenticated, clickController.getClicks);
-app.post('/api/:id/clicks', passportConfig.isAuthenticated, clickController.addClick);
-app.delete('/api/:id/clicks', passportConfig.isAuthenticated, clickController.resetClicks);
+app.get('/api/clicks', passportConfig.isAuthenticated, clickController.getClicks);
+app.post('/api/clicks', passportConfig.isAuthenticated, clickController.addClick);
+app.delete('/api/clicks', passportConfig.isAuthenticated, clickController.resetClicks);
 
-app.get('/api/:id', passportConfig.isAuthenticated, function(req, res) {
+app.get('/api/profile', passportConfig.isAuthenticated, function(req, res) {
 	res.json(req.user.github);
 });
 
