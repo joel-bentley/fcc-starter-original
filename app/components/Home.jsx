@@ -1,7 +1,7 @@
 import React from 'react'
-import {Button} from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 
-const Home = ({displayName, clicks, handleCountClick, handleResetClick}) => (
+const Home = ({ displayName, clicks, handleCountClick, handleResetClick }) => (
   <div>
     <p>Welcome, {displayName}!</p>
     <p>You have clicked the button {clicks} times.</p>

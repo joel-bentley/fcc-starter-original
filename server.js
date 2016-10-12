@@ -8,9 +8,6 @@ var favicon = require('serve-favicon');
 var mongoose = require('mongoose');
 var passport = require('passport');
 
-var webpack = require('webpack');
-var config = require('./webpack.config');
-
 // Load environment variables from .env file.
 dotenv.load();
 
@@ -23,8 +20,6 @@ var passportConfig = require('./config/passport');
 
 // Create Express server.
 var app = express();
-
-var compiler = webpack(config);
 
 // Connect to MongoDB.
 mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI);
@@ -46,24 +41,11 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(favicon(path.join(__dirname, '/public/favicon.png')));
+app.use(favicon(path.join(__dirname, '/public/favicon.ico')));
 app.use('/public', express.static(path.join(__dirname, '/public')));
 
-if (app.get('env') === 'development') {
-  app.use(require('webpack-dev-middleware')(compiler, {
-    noInfo: true,
-    publicPath: config.output.publicPath
-  }));
-  app.use(require('webpack-hot-middleware')(compiler));
-}
-
 // Primary app routes.
-var clientAppRoutes = ['/', '/profile'];
-if (app.get('env') === 'production') {
-	app.get(clientAppRoutes, passportConfig.isAuthenticated, routeController.index);
-} else {
-	app.get(clientAppRoutes, routeController.index);
-}
+app.get(['/', '/profile'], passportConfig.isAuthenticated, routeController.index);
 app.get('/login', routeController.getLogin);
 app.get('/logout', routeController.getLogout);
 

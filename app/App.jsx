@@ -1,7 +1,7 @@
 import React from 'react'
-import {BrowserRouter, Match} from 'react-router'
+import { BrowserRouter, Match } from 'react-router'
 
-import {ajaxRequest} from './utils/ajax-request'
+import { ajaxRequest } from './utils/ajax-request'
 
 import NavigationBar from './components/NavigationBar'
 import Home from './components/Home'
@@ -11,23 +11,19 @@ const clickApi = '/api/clicks'
 const profileApi = '/api/profile'
 
 class App extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
+  state = {
       id: '',
       username: '',
       displayName: '',
       publicRepos: '',
       clicks: 0
-    }
-    this.handleCountClick = this.handleCountClick.bind(this)
-    this.handleResetClick = this.handleResetClick.bind(this)
   }
+
   componentDidMount() {
     ajaxRequest('GET', profileApi, (profileData) => {
       ajaxRequest('GET', clickApi, (clickData) => {
-        const {id, username, displayName, publicRepos} = JSON.parse(profileData)
-        const {clicks} = JSON.parse(clickData)
+        const { id, username, displayName, publicRepos } = JSON.parse(profileData)
+        const { clicks } = JSON.parse(clickData)
         this.setState({
           id,
           username,
@@ -38,7 +34,8 @@ class App extends React.Component {
       })
     })
   }
-  handleCountClick() {
+
+  handleCountClick = () => {
     ajaxRequest('POST', clickApi, () => {
        ajaxRequest('GET', clickApi, (clickData) => {
          this.setState({
@@ -47,7 +44,8 @@ class App extends React.Component {
        })
     })
   }
-  handleResetClick() {
+
+  handleResetClick = () => {
     ajaxRequest('DELETE', clickApi, () => {
        ajaxRequest('GET', clickApi, (clickData) => {
          this.setState({
@@ -56,8 +54,9 @@ class App extends React.Component {
        })
     })
   }
+  
   render() {
-    const {id, username, displayName, publicRepos, clicks} = this.state
+    const { id, username, displayName, publicRepos, clicks } = this.state
 
     return (
       <BrowserRouter>
@@ -68,12 +67,12 @@ class App extends React.Component {
             <div className="text-center">
 
               <Match exactly pattern="/" component={() => (
-                <Home {...{displayName, clicks}}
+                <Home {...{ displayName, clicks }}
                       handleCountClick={this.handleCountClick}
                       handleResetClick={this.handleResetClick}/>
               )}/>
               <Match pattern="/profile" component={() => (
-                  <Profile  {...{id, username, displayName, publicRepos}}/>
+                  <Profile  {...{ id, username, displayName, publicRepos }}/>
               )}/>
 
             </div>

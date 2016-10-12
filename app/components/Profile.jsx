@@ -1,7 +1,7 @@
 import React from 'react'
-import {Col, Table} from 'react-bootstrap'
+import { Col, Table } from 'react-bootstrap'
 
-const Profile = ({id, username, displayName, publicRepos}) => (
+const Profile = ({ id, username, displayName, publicRepos }) => (
   <Col md={6} mdOffset={3} sm={8} smOffset={2}>
     <img src="/public/img/gh-mark-32px.png" alt="github logo"/>
     <div className="text-left">

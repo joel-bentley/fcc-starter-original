@@ -1,6 +1,6 @@
 import React from 'react'
-import {Link} from 'react-router'
-import {Glyphicon, Navbar, Nav, NavItem} from 'react-bootstrap'
+import { Link } from 'react-router'
+import { Glyphicon, Navbar, Nav, NavItem } from 'react-bootstrap'
 
 const NavigationBar = () => (
   <Navbar>
