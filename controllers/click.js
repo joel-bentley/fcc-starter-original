@@ -26,7 +26,7 @@ exports.addClick = function(req, res) {
 			throw err;
 		}
 
-		res.json(result.nbrClicks);
+		res.send(200);
 	});
 };
 
@@ -40,6 +40,6 @@ exports.resetClicks = function(req, res) {
 			throw err;
 		}
 
-		res.json(result.nbrClicks);
+		res.send(200);
 	});
 };
