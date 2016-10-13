@@ -2,7 +2,7 @@ var path = require('path');
 
 // GET /
 exports.index = function(req, res) {
-	res.sendFile(path.join(__dirname, '../public/index.html'));
+	res.sendFile(path.join(__dirname, '../public/main.html'));
 };
 
 // GET /login
