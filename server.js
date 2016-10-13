@@ -1,6 +1,8 @@
 // Module dependencies.
 var express = require('express');
+var compression = require('compression');
 var session = require('express-session');
+var bodyParser = require('body-parser');
 var chalk = require('chalk');
 var dotenv = require('dotenv');
 var path = require('path');
@@ -34,6 +36,9 @@ mongoose.Promise = global.Promise;
 
 // Express configuration.
 app.set('port', process.env.PORT || 8080);
+app.use(compression());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
 	secret: process.env.SESSION_SECRET,
 	resave: false,
