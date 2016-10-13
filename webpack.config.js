@@ -8,7 +8,7 @@ var config = {
   output: {
     path: path.join(__dirname, 'public', 'js'),
     filename: 'bundle.js',
-    publicPath: '/public/js'
+    publicPath: '/js'
   },
   plugins: [
     new webpack.DefinePlugin({

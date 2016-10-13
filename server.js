@@ -42,7 +42,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(favicon(path.join(__dirname, '/public/favicon.ico')));
-app.use('/public', express.static(path.join(__dirname, '/public')));
+app.use(express.static(path.join(__dirname, '/public')));
 
 // Primary app routes.
 app.get(['/', '/profile'], passportConfig.isAuthenticated, routeController.index);
